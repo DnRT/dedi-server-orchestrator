@@ -49,4 +49,44 @@ Para automatizarlo (ej. respaldo diario a las 3 AM), agrégalo a tu cron en Linu
 ```
 
 ## 🎮 Añadir Nuevos Juegos
+
 El orquestador lee las plantillas de configuración en formato JSON desde la carpeta `templates/`. Si añades nuevos archivos allí (ej. `terraria.json`), aparecerán automáticamente en el menú desplegable del Panel Web listos para ser desplegados con un clic.
+
+A continuación tienes la estructura base que puedes **copiar, pegar y modificar** según la imagen de Docker que vayas a utilizar:
+
+```json
+{
+    "image": "usuario_docker/nombre-de-imagen:latest",
+    "ports": {
+        "puerto_host": "puerto_contenedor"
+    },
+    "environment": {
+        "CLAVE_ENTORNO": "valor_deseado",
+        "OTRA_CLAVE": "1234"
+    },
+    "volumes": {
+        "/ruta/de/datos/dentro/del/contenedor": "sufijo_del_volumen_local"
+    }
+}
+```
+
+### Ejemplo real: Plantilla para Terraria
+Si quisieras agregar soporte para Terraria, deberías crear el archivo `templates/terraria.json` con este contenido exacto:
+
+```json
+{
+    "image": "rysh/terraria:latest",
+    "ports": {
+        "7777": "7777"
+    },
+    "environment": {
+        "WORLD_SIZE": "3",
+        "MAX_PLAYERS": "16"
+    },
+    "volumes": {
+        "/world": "terraria_world_data"
+    }
+}
+```
+
+> **Nota sobre volúmenes**: El orquestador antepondrá automáticamente el nombre que le des a la instancia (ej. `mi-server`) al sufijo del volumen. Así que en el ejemplo de Terraria, si llamas a tu servidor `survival`, Docker creará y aislará un volumen local llamado `survival_terraria_world_data`, evitando que dos servidores pisen los mismos archivos.
